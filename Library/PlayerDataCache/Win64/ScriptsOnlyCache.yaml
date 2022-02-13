@@ -2,6 +2,7 @@ ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
     - GameManager
+    - SoundManager
     - UIManager
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
@@ -41,20 +42,24 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
-      Script: {instanceID: 2262}
+      Script: {instanceID: 2266}
     - Class: 114
-      Script: {instanceID: 2624}
+      Script: {instanceID: 2628}
     - Class: 114
-      Script: {instanceID: 2784}
+      Script: {instanceID: 2788}
     - Class: 114
-      Script: {instanceID: 3000}
+      Script: {instanceID: 3004}
     - Class: 114
-      Script: {instanceID: 3246}
+      Script: {instanceID: 3250}
     - Class: 114
-      Script: {instanceID: 4690}
+      Script: {instanceID: 4694}
+    - Class: 114
+      Script: {instanceID: 21868}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 157
@@ -178,7 +183,7 @@ ScriptsOnlyBuild:
     className: Text
   - hash:
       serializedVersion: 2
-      Hash: ded30821a4fcfff77b7961e09531478c
+      Hash: f67b89656689a996267fbb7d22c90b59
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: UIManager
@@ -614,6 +619,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.2D.IK.Runtime.dll
     namespaceName: UnityEngine.U2D.IK
     className: FabrikSolver2D
+  - hash:
+      serializedVersion: 2
+      Hash: 6651b66ba93f3b0b4c332774a243d100
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SoundManager
   platform: 19
   scenePathNames:
   - Assets/Scenes/main.unity

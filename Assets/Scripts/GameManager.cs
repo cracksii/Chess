@@ -9,23 +9,48 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if(INSTANCE != null)
-            Destroy(gameObject);
-        else
+        if(INSTANCE == null)
             INSTANCE = this;
+        else
+            Destroy(gameObject);
     }
 
     void Start()
     {
-        // chess = new ChessManager("k1r5/pppr4/3Q4/7R/8/8/8/7K w KQkq - 0 1", false);
-        chess = new ChessManager(_debug: false);
+        SoundManager.INSTANCE.Init();
+        chess = new ChessManager(_debug: true);
+        chess = new ChessManager("r3k2r/8/8/3Q4/2B5/5N2/8/R3K2R w KQkq - 0 1", true);
+        UIManager.INSTANCE.GenerateFields();
+        UIManager.INSTANCE.GeneratePieces(chess.board);
+    }
+
+    public void Reset()
+    {
+        Transform parent = GameObject.Find("Field").transform;
+        for(int i = 0; i < parent.childCount; i++)
+            Destroy(parent.GetChild(i).gameObject);
+
+        parent = GameObject.Find("Pieces").transform;
+        for(int i = 0; i < parent.childCount; i++)
+            Destroy(parent.GetChild(i).gameObject);
+
+        UIManager.INSTANCE.fields = new Field[64];
+        UIManager.INSTANCE.pieces = new Piece[64];
+
+        chess = new ChessManager(_debug: true);
         UIManager.INSTANCE.GenerateFields();
         UIManager.INSTANCE.GeneratePieces(chess.board);
     }
 
     void Update()
     {
-        if(Input.GetKey(KeyCode.LeftControl) && Input.GetKeyDown(KeyCode.Z))
+        #if UNITY_EDITOR
+            KeyCode c = KeyCode.LeftShift;
+        #else
+            KeyCode c = KeyCode.LeftControl;
+        #endif
+
+        if(Input.GetKey(c) && Input.GetKeyDown(KeyCode.Z))
         {
             if(chess.moves.Count == 0)
                 return;
@@ -43,6 +68,10 @@ public class GameManager : MonoBehaviour
             chess.moves.Remove(chess.lastMove);
             UIManager.INSTANCE.UpdateDragState();
             UIManager.INSTANCE.DrawMoves(new Move[0]);
+        }
+        else if(Input.GetKey(c) && Input.GetKeyDown(KeyCode.P))
+        {
+            Debug.Log(Parser.BoardToFen(chess.game));
         }
     }
 }

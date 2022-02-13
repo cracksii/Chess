@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UIManager : MonoBehaviour
 {
     public static UIManager INSTANCE;
+    public bool showCoordinates = false;
     [HideInInspector]
     public Field[] fields = new Field[64];
     public Piece[] pieces = new Piece[64];
@@ -43,10 +44,10 @@ public class UIManager : MonoBehaviour
 
     void Awake()
     {
-        if(INSTANCE != null)
-            Destroy(gameObject);
-        else
+        if(INSTANCE == null)
             INSTANCE = this;
+        else
+            Destroy(gameObject);
         
         map = new Dictionary<int, Sprite>()
         {
@@ -68,15 +69,40 @@ public class UIManager : MonoBehaviour
 
     public void GenerateFields() 
     {
+        string m = "abcdefgh";
+        Transform parent = GameObject.Find("Field").transform;
         for(int i = 0; i < 8; i++)
         {
+            if(showCoordinates)
+            {
+                Text row = new GameObject(i.ToString(), typeof(Text)).GetComponent<Text>();
+                row.transform.SetParent(parent);
+                row.transform.localScale = Vector3.one;
+                row.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+                row.text = (Mathf.Abs(8 - i)).ToString();
+                row.fontSize = 50;
+                row.GetComponent<RectTransform>().anchoredPosition = new Vector2(-0.25f * factor + xOffset, -i * factor + yOffset + (row.fontSize / 2));
+            }
+
             for(int j = 0; j < 8; j++)
             {
+                if(i == 7 && showCoordinates)
+                {
+                    Text column = new GameObject(i.ToString(), typeof(Text)).GetComponent<Text>();
+                    column.transform.SetParent(parent);
+                    column.transform.localScale = Vector3.one;
+                    column.font = Resources.GetBuiltinResource(typeof(Font), "Arial.ttf") as Font;
+                    column.text = m[j].ToString();
+                    column.fontSize = 50;
+                    column.GetComponent<RectTransform>().anchoredPosition = new Vector2(j * factor + xOffset + factor - 15, -(i + 0.75f) * factor + yOffset);
+                }
+
+
                 int idx = i * 8 + j;
 
-                fields[idx] = new GameObject($"field {idx}", typeof(Field)).GetComponent<Field>();
+                fields[idx] = new GameObject($"field {i} {j}", typeof(Field)).GetComponent<Field>();
                 fields[idx].position = idx;
-                fields[idx].transform.SetParent(GameObject.Find("Field").transform);
+                fields[idx].transform.SetParent(parent);
                 fields[idx].GetComponent<RectTransform>().anchoredPosition = new Vector2(j * factor + xOffset, -i * factor + yOffset);
                 fields[idx].GetComponent<RectTransform>().pivot = Vector2.zero;
                 fields[idx].transform.localScale = scale;
@@ -181,6 +207,7 @@ public class UIManager : MonoBehaviour
     {
         Debug.Log($"{(GameManager.INSTANCE.chess.game.currentMove == Piece.Type.WHITE ? "Black": "White")} won");
         Cursor.SetCursor(defaultCursorTexture, Vector2.zero, CursorMode.Auto);
+        SoundManager.INSTANCE.Play("end");
         foreach(Piece piece in UIManager.INSTANCE.pieces)
         {
             if(piece != null)
@@ -190,5 +217,13 @@ public class UIManager : MonoBehaviour
                 Destroy(obj.GetComponent<DragDropManager>());
             }
         }
+
+        StartCoroutine(Reset());
+    }
+
+    private IEnumerator Reset()
+    {
+        yield return new WaitForSeconds(3);
+        GameManager.INSTANCE.Reset();
     }
 }

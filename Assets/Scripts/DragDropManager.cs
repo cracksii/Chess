@@ -47,6 +47,7 @@ public class DragDropManager : MonoBehaviour, IBeginDragHandler, IEndDragHandler
             UIManager.INSTANCE.UpdateDragState();
             GetComponent<Piece>().position = _position;
             rectTransform.anchoredPosition = _other.GetComponent<RectTransform>().anchoredPosition;
+            startPos = rectTransform.anchoredPosition;
             Piece p;
             if(_other.TryGetComponent(out p))
                 Destroy(_other);
@@ -77,11 +78,14 @@ public class DragDropManager : MonoBehaviour, IBeginDragHandler, IEndDragHandler
             else if(!eventData.pointerCurrentRaycast.gameObject.TryGetComponent(out f))
                 rectTransform.anchoredPosition = startPos;
         }
+        else
+            rectTransform.anchoredPosition = startPos;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        Cursor.SetCursor(UIManager.INSTANCE.hoverCursorTexture, Vector2.zero, CursorMode.Auto);
+        if(CurrentlyDragging() || GameManager.INSTANCE.chess.game.currentMove == GameManager.INSTANCE.chess.game.Color(GetComponent<Piece>().position))
+            Cursor.SetCursor(UIManager.INSTANCE.hoverCursorTexture, Vector2.zero, CursorMode.Auto);
         if(CurrentlyDragging())
             return;
         if(!draggable)
@@ -134,7 +138,7 @@ public class DragDropManager : MonoBehaviour, IBeginDragHandler, IEndDragHandler
         }
     }
 
-    private bool CurrentlyDragging() 
+    public bool CurrentlyDragging() 
     {
         foreach(Piece piece in UIManager.INSTANCE.pieces)
             if(piece != null && (piece.GetComponent<DragDropManager>().isDragging || piece.GetComponent<DragDropManager>().clicked))

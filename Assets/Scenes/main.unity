@@ -187,7 +187,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &224576980
 GameObject:
@@ -283,7 +283,7 @@ RectTransform:
   m_Children:
   - {fileID: 821397252}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -302,6 +302,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e5d376e1cf710b246b5867ff5f3b5537, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showCoordinates: 0
   fields:
   - {fileID: 0}
   - {fileID: 0}
@@ -476,7 +477,6 @@ GameObject:
   m_Component:
   - component: {fileID: 519420032}
   - component: {fileID: 519420031}
-  - component: {fileID: 519420029}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -484,14 +484,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &519420029
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -549,6 +541,117 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &649014421
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 649014423}
+  - component: {fileID: 649014422}
+  - component: {fileID: 649014424}
+  - component: {fileID: 649014425}
+  m_Layer: 0
+  m_Name: Root
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &649014422
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649014421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a5292108ac261494b9aae6651a8fbfde, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chess:
+    game:
+      board: 
+      currentMove: 0
+      allowedCastlings: 
+      enPassant: 0
+      halfTurns: 0
+      nextTurnNumber: 0
+    debug: 1
+    moves: []
+--- !u!4 &649014423
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649014421}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!81 &649014424
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649014421}
+  m_Enabled: 1
+--- !u!114 &649014425
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649014421}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8e433ef56f452641a6b3eebfe3e6def, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: move
+    clip: {fileID: 8300000, guid: fe6ae9d867286934ab8c7a57cb87b0df, type: 3}
+    loop: 0
+    playOnStartup: 0
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: check
+    clip: {fileID: 8300000, guid: 3ca4cecba59f1b141aecd2b37dd05edb, type: 3}
+    loop: 0
+    playOnStartup: 0
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: capture
+    clip: {fileID: 8300000, guid: 0654817679dc9a0498608db4fc4f19d1, type: 3}
+    loop: 0
+    playOnStartup: 0
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: castle
+    clip: {fileID: 8300000, guid: 2b7748171d90bd04eae32bb0665ad2d9, type: 3}
+    loop: 0
+    playOnStartup: 0
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
+  - name: end
+    clip: {fileID: 8300000, guid: 0360afe7c70f17b4eb637632cbd9102e, type: 3}
+    loop: 0
+    playOnStartup: 0
+    volume: 1
+    pitch: 1
+    source: {fileID: 0}
 --- !u!1 &821397251
 GameObject:
   m_ObjectHideFlags: 0
@@ -558,7 +661,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 821397252}
-  - component: {fileID: 821397253}
   m_Layer: 5
   m_Name: Game
   m_TagString: Untagged
@@ -587,28 +689,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0, y: 1}
---- !u!114 &821397253
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 821397251}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a5292108ac261494b9aae6651a8fbfde, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chess:
-    game:
-      board: 
-      currentMove: 0
-      allowedCastlings: 
-      enPassant: 0
-      halfTurns: 0
-      nextTurnNumber: 0
-    debug: 1
-    moves: []
 --- !u!1 &1525970556
 GameObject:
   m_ObjectHideFlags: 0

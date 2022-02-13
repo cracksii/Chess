@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 public static class Parser
@@ -22,7 +23,44 @@ public static class Parser
 
     public static string BoardToFen(ChessGame _game) 
     {
-        return "";
+        string fen = "";
+
+        int[] board = _game.board;
+        int emptyFields = 0;        
+        for(int i = 0; i < 64; i++)
+        {
+            if(board[i] == Piece.Type.NONE)
+                emptyFields++;
+            else
+            {
+                if(emptyFields != 0)
+                {
+                    fen += emptyFields.ToString();
+                    emptyFields = 0;
+                }
+                char c = mapping.Keys.ToArray()[mapping.Values.ToList().IndexOf(_game.GetPiece(i))];
+                fen += (_game.Color(i) == Piece.Type.WHITE) ? char.ToUpper(c): c;
+            }
+
+            if((i + 1) % 8 == 0)
+            {
+                if(emptyFields != 0)
+                {
+                    fen += emptyFields.ToString();
+                    emptyFields = 0;
+                }
+                if(i != 63)
+                    fen += "/";
+            }
+        }
+
+        fen += _game.currentMove == Piece.Type.WHITE    ? " w ": " b ";
+        fen += _game.allowedCastlings.Length != 0       ? String.Join("", _game.allowedCastlings): " - ";
+        fen += _game.enPassant != -1                    ? $" {_game.enPassant} ": " - ";
+        fen += _game.halfTurns + " ";
+        fen += _game.nextTurnNumber;
+
+        return fen;
     }
 
     public static ChessGame LoadFenString(string _fen)

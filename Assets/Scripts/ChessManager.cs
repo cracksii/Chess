@@ -12,10 +12,16 @@ public class ChessManager
     public List<Move> moves;
     public Move lastMove { get => moves.Last(); }
 
-    public ChessManager(string _fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", bool _debug=true) 
+    public ChessManager(string _fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", bool _debug=false) 
     {
         game = ChessGame.Load(_fen);
-        debug = _debug;
+        
+        #if UNITY_EDITOR
+            debug = _debug;
+        #else
+            debug = false;
+        #endif
+
         moves = new List<Move>();
     }
 
@@ -90,7 +96,7 @@ public class ChessManager
                 break;
 
             case Piece.Type.KING:
-                canMove = CheckKing(_move);
+                canMove = CheckKing(_move, _finalCall);
                 break;
             default:
                 Debug.LogError("ERROR");
@@ -177,12 +183,17 @@ public class ChessManager
         return false;
     }
 
-    private bool CheckKing(Move _move)
+    private bool CheckKing(Move _move, bool _isRealCall)
     {
         int xDistance = Math.Abs(_move.startPos % 8 - _move.targetPos % 8);
         int yDistance = Math.Abs(_move.startPos / 8 - _move.targetPos / 8);
-        if((_move.absDifference == 7 || _move.absDifference == 8 || _move.absDifference == 9 || _move.absDifference == 1) && (xDistance <= 1) && (yDistance <= 1))
+        if(xDistance <= 1 && yDistance <= 1)
+        {
+            if(_isRealCall) 
+                game.allowedCastlings = string.Join("", game.allowedCastlings).Replace(game.currentMove == Piece.Type.WHITE ? "K": "k", "").Replace(game.currentMove == Piece.Type.WHITE ? "Q": "q", "").ToCharArray();
             return true;
+        }
+
         return false;
     }
 
@@ -244,6 +255,7 @@ public class ChessManager
 
     public string TryMove(Move _move)
     {
+        Cursor.SetCursor(UIManager.INSTANCE.defaultCursorTexture, Vector2.zero, CursorMode.Auto);
         if(!CheckMove(_move, _finalCall: true))
             return "error";
 
@@ -251,8 +263,12 @@ public class ChessManager
         CheckForPawnPromotion();
 
         game.currentMove = (game.currentMove == Piece.Type.WHITE) ? Piece.Type.BLACK: Piece.Type.WHITE;
-
         moves.Add(_move);
+        if(lastMove.targetValue == Piece.Type.NONE)
+            SoundManager.INSTANCE.Play("move");
+        else
+            SoundManager.INSTANCE.Play("capture");
+
         if(GetAllMovesOfColor(game.currentMove, true).Length == 0) 
             return "checkmate";
         return "success";
